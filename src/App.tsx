@@ -1,7 +1,7 @@
 // Composant principal de l'application Tragax
 // Ce composant gère le routage et la structure générale de l'application
 
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,45 +22,56 @@ import "./App.css"; // Importer le fichier CSS pour les styles globaux
 // Composant de navigation
 const Navigation: React.FC = () => {
   const { isAuthenticated, currentUser, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="header">
-      <nav>
-        <div className="nav-container">
-          <Link to="/" className="nav-logo">
-            Tragax
+  <nav>
+    <div className="nav-container">
+      <Link to="/" className="nav-logo">
+        Tragax
+      </Link>
+      <button
+        className="burger-menu"
+        aria-label="Ouvrir le menu"
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <span className="burger-bar"></span>
+        <span className="burger-bar"></span>
+        <span className="burger-bar"></span>
+      </button>
+      <div className={`nav-links-wrapper${menuOpen ? " open" : ""}`}>
+        <div className="nav-links">
+          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Accueil
           </Link>
-          <div className="nav-links">
-            <Link to="/" className="nav-link">
-              Accueil
-            </Link>
-            <Link to="/translate" className="nav-link">
-              Traduire
-            </Link>
-            <Link to="/lists" className="nav-link">
-              Mes Listes
-            </Link>
-            {/* Ajoute d'autres liens si besoin */}
-          </div>
-          <div className="nav-links">
-            {isAuthenticated ? (
-              <>
-                <Link to="/profile" className="nav-link">
-                  {currentUser?.username}
-                </Link>
-                <button onClick={logout} className="nav-button">
-                  Déconnexion
-                </button>
-              </>
-            ) : (
-              <Link to="/auth" className="nav-link">
-                Connexion
-              </Link>
-            )}
-          </div>
+          <Link to="/translate" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Traduire
+          </Link>
+          <Link to="/lists" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Mes Listes
+          </Link>
         </div>
-      </nav>
-    </header>
+        <div className="nav-links">
+          {isAuthenticated ? (
+            <>
+              <Link to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
+                {currentUser?.username}
+              </Link>
+              <button onClick={logout} className="nav-button">
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <Link to="/auth" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Connexion
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
   );
 };
 // Page d'accueil
