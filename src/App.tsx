@@ -26,52 +26,75 @@ const Navigation: React.FC = () => {
 
   return (
     <header className="header">
-  <nav>
-    <div className="nav-container">
-      <Link to="/" className="nav-logo">
-        Tragax
-      </Link>
-      <button
-        className="burger-menu"
-        aria-label="Ouvrir le menu"
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        <span className="burger-bar"></span>
-        <span className="burger-bar"></span>
-        <span className="burger-bar"></span>
-      </button>
-      <div className={`nav-links-wrapper${menuOpen ? " open" : ""}`}>
-        <div className="nav-links">
-          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Accueil
+      <nav>
+        <div className="nav-container">
+          <Link to="/" className="nav-logo">
+            Tragax
           </Link>
-          <Link to="/translate" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Traduire
-          </Link>
-          <Link to="/lists" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Mes Listes
-          </Link>
-        </div>
-        <div className="nav-links">
-          {isAuthenticated ? (
-            <>
-              <Link to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
-                {currentUser?.username}
+          <button
+            className={`burger-menu ${menuOpen ? "open" : ""}`}
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="burger-bar"></span>
+            <span className="burger-bar"></span>
+            <span className="burger-bar"></span>
+          </button>
+          <div className={`nav-links-wrapper${menuOpen ? " open" : ""}`}>
+            <div className="nav-links">
+              <Link
+                to="/"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                Accueil
               </Link>
-              <button onClick={logout} className="nav-button">
-                Déconnexion
-              </button>
-            </>
-          ) : (
-            <Link to="/auth" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Connexion
-            </Link>
-          )}
+              <Link
+                to="/translate"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                Traduire
+              </Link>
+              <Link
+                to="/lists"
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                Mes Listes
+              </Link>
+            </div>
+            <div className="nav-links">
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="nav-link"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {currentUser?.username}
+                  </Link>
+                  <button onClick={logout} className="nav-button">
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="nav-link"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Connexion
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </nav>
-</header>
+      </nav>
+      {menuOpen && (
+        <div className="menu-overlay open" onClick={() => setMenuOpen(false)} />
+      )}
+    </header>
   );
 };
 // Page d'accueil
