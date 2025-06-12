@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { TranslationService } from "../services/translationService";
+import { OfflineTranslationAPI } from "../services/tranlslationServiceOffline"; 
 import type { TranslationItem } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 import { StorageService } from "../services/storageService";
@@ -71,47 +72,67 @@ const MultiTranslator: React.FC = () => {
   };
 
   // Gérer la soumission du formulaire de traduction
-  const handleTranslate = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleTranslate = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!inputText.trim()) {
-      setError("Veuillez entrer au moins un mot à traduire.");
-      return;
-    }
+  if (!inputText.trim()) {
+    setError("Veuillez entrer au moins un mot à traduire.");
+    return;
+  }
 
-    if (sourceLanguage === targetLanguage) {
-      setError("Les langues source et cible doivent être différentes.");
-      return;
-    }
+  if (sourceLanguage === targetLanguage) {
+    setError("Les langues source et cible doivent être différentes.");
+    return;
+  }
 
-    setError(null);
-    setIsTranslating(true);
+  setError(null);
+  setIsTranslating(true);
+
+  try {
+    // Diviser le texte en lignes et filtrer les lignes vides
+    const words = inputText
+      .split("\n")
+      .map((word) => word.trim())
+      .filter((word) => word !== "");
+
+    let results: TranslationItem[];
 
     try {
-      // Diviser le texte en lignes et filtrer les lignes vides
-      const words = inputText
-        .split("\n")
-        .map((word) => word.trim())
-        .filter((word) => word !== "");
-
-      // Traduire tous les mots
-      const results = await TranslationService.translateMultiple(
+      // Essayer la traduction en ligne
+      results = await TranslationService.translateMultiple(
         words,
         sourceLanguage,
         targetLanguage
       );
-
-      setTranslations(results);
-      setSelectedItems([]);
-    } catch (error) {
-      console.error("Erreur lors de la traduction:", error);
-      setError(
-        "Une erreur est survenue lors de la traduction. Veuillez réessayer."
+    } catch {
+      // Si la traduction en ligne échoue, utiliser la traduction hors ligne
+      results = await Promise.all(
+        words.map(async (word) => {
+          const res = await OfflineTranslationAPI.translate(word, sourceLanguage, targetLanguage);
+          return {
+            id: res.id,
+            sourceText: word,
+            targetText: res.targetText,
+            sourceLanguage,
+            targetLanguage,
+            createdAt: Date.now(),
+            learned: false
+          };
+        })
       );
-    } finally {
-      setIsTranslating(false);
     }
-  };
+
+    setTranslations(results);
+    setSelectedItems([]);
+  } catch (error) {
+    console.error("Erreur lors de la traduction:", error);
+    setError(
+      "Une erreur est survenue lors de la traduction. Veuillez réessayer."
+    );
+  } finally {
+    setIsTranslating(false);
+  }
+};
 
   // Gérer la sélection/désélection d'un item
   const toggleItemSelection = (itemId: string) => {
