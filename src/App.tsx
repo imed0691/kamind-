@@ -25,12 +25,14 @@ const Navigation: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="header">
+   <header className="header">
       <nav>
         <div className="nav-container">
-          <Link to="/" className="nav-logo">
+          <Link to="/" className="nav-logo" onClick={() => setMenuOpen(false)}>
             Tragax
           </Link>
+          
+          {/* Bouton Burger */}
           <button
             className={`burger-menu ${menuOpen ? "open" : ""}`}
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
@@ -40,38 +42,24 @@ const Navigation: React.FC = () => {
             <span className="burger-bar"></span>
             <span className="burger-bar"></span>
           </button>
-          <div className={`nav-links-wrapper${menuOpen ? " open" : ""}`}>
+          
+          {/* Menu de navigation - CORRIGÉ */}
+          <div className={`nav-links-wrapper ${menuOpen ? "open" : ""}`}>
             <div className="nav-links">
-              <Link
-                to="/"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>
                 Accueil
               </Link>
-              <Link
-                to="/translate"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/translate" className="nav-link" onClick={() => setMenuOpen(false)}>
                 Traduire
               </Link>
-              <Link
-                to="/lists"
-                className="nav-link"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/lists" className="nav-link" onClick={() => setMenuOpen(false)}>
                 Mes Listes
               </Link>
             </div>
             <div className="nav-links">
               {isAuthenticated ? (
                 <>
-                  <Link
-                    to="/profile"
-                    className="nav-link"
-                    onClick={() => setMenuOpen(false)}
-                  >
+                  <Link to="/profile" className="nav-link" onClick={() => setMenuOpen(false)}>
                     {currentUser?.username}
                   </Link>
                   <button onClick={logout} className="nav-button">
@@ -79,11 +67,7 @@ const Navigation: React.FC = () => {
                   </button>
                 </>
               ) : (
-                <Link
-                  to="/auth"
-                  className="nav-link"
-                  onClick={() => setMenuOpen(false)}
-                >
+                <Link to="/auth" className="nav-link" onClick={() => setMenuOpen(false)}>
                   Connexion
                 </Link>
               )}
@@ -91,8 +75,13 @@ const Navigation: React.FC = () => {
           </div>
         </div>
       </nav>
+      
+      {/* Overlay pour fermer le menu */}
       {menuOpen && (
-        <div className="menu-overlay open" onClick={() => setMenuOpen(false)} />
+        <div 
+          className="menu-overlay" 
+          onClick={() => setMenuOpen(false)}
+        />
       )}
     </header>
   );

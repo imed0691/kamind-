@@ -126,7 +126,7 @@
 
 /* Menu Burger - Optimisé pour mobile */
 .burger-menu {
-  display: none;
+  display: none; /* Caché par défaut sur desktop */
   flex-direction: column;
   justify-content: center;
   gap: 5px;
@@ -139,13 +139,13 @@
   z-index: 110;
   margin-left: auto; /* Alignement à droite */
 }
+
 .burger-bar {
   width: 26px;
   height: 3px;
   background: #fff;
   border-radius: 2px;
   transition: all 0.3s ease;
-  transform-origin: left center;
 }
 
 /* Navigation responsive - Mobile */
