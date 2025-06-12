@@ -108,7 +108,7 @@ class OfflineDictionaryManager {
 }
 class LightweightTranslationModel {
 private models = new Map<string, LightweightModel>();
-  private isLoaded = false;
+  
 
   // Charger un modèle de traduction léger
   async loadModel(modelConfig: TranslationModel, modelData: ArrayBuffer): Promise<void> {
@@ -124,7 +124,6 @@ private models = new Map<string, LightweightModel>();
       };
       
       this.models.set(modelKey, model);
-      this.isLoaded = true;
       
       console.log(`🤖 Modèle ${modelKey} chargé (${modelConfig.size} MB, précision: ${modelConfig.accuracy}%)`);
     } catch (error) {
